@@ -16,7 +16,7 @@ Set up GitHub actions, variables and secrets:
   - Actions / General
     - Workflow permissions: Read and write permissions
 
-## Development
+## Development and Testing
 
 Install prerequisites:
 
@@ -38,6 +38,12 @@ Use:
 
 ```shell
 ./cpp-cli
+```
+
+Tests:
+
+```shell
+./test_unit
 ```
 
 Cleanup:
