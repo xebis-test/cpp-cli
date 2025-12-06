@@ -4,7 +4,7 @@ Hello world C++ CLI application.
 
 ## Features
 
-- [CI](.github/workflows/ci.yaml)
+- [CI](.github/workflows/ci.yaml) on PR or merge to the `main` branch
 - [Semantic Release](.github/workflows/semantic-release.yaml) on merge to the `main` branch
 
 ## Development and Testing
@@ -43,4 +43,12 @@ Cleanup:
 ```shell
 popd
 rm -rf build/
+```
+
+## Distribution
+
+Docker build and run:
+
+```shell
+sudo docker run --rm $(sudo docker build -q .)
 ```
