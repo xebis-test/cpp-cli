@@ -1,0 +1,47 @@
+---
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-analyze:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install build & analysis tools
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential cmake clang-format
+
+    - name: Run clang-format check
+      run: |
+        FORMAT_DIFF=$(find . -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | xargs clang-format -style=file -output-replacements-xml | grep "<replacement " || true)
+        if [[ ! -z "$FORMAT_DIFF" ]]; then
+          echo "❌ Code formatting issues detected. Run clang-format to fix."
+          exit 1
+        fi
+
+    - name: Build application and unit tests
+      run: |
+        mkdir build && cd build
+        cmake ..
+        make
+
+    - name: Run Unit Tests
+      run: |
+        cd build
+        ./test_unit
+
+    - name: Run Integration Test
+      run: |
+        cd build
+        ../tests/test_integration.sh
