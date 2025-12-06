@@ -5,7 +5,7 @@ Hello world C++ CLI application.
 ## Features
 
 - [CI](.github/workflows/ci.yaml) on PR or merge to the `main` branch
-- [Semantic Release](.github/workflows/semantic-release.yaml) on merge to the `main` branch
+- [Release](.github/workflows/release.yaml) on merge to the `main` branch
 
 ## Development and Testing
 

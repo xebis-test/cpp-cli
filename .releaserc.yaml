@@ -13,3 +13,5 @@ plugins:
     - assets:
       - CHANGELOG.md
   - semantic-release-major-tag
+  - - "@semantic-release/exec"
+    - prepareCmd: "echo \"next-version=${nextRelease.version}\" >> \"$GITHUB_OUTPUT\""
