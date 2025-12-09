@@ -84,3 +84,56 @@ jobs:
         IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/cpp-cli"
         docker push "${IMAGE_NAME}:v${{ needs.semantic-release.outputs.next-version }}"
         docker push "${IMAGE_NAME}:latest"
+
+    - name: Install cosign
+      uses: sigstore/cosign-installer@v2
+      with:
+        version: latest
+
+    - name: Prepare attestation predicate
+      run: |
+        IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/cpp-cli"
+        V_TAG="${IMAGE_NAME}:v${{ needs.semantic-release.outputs.next-version }}"
+        VERSION="${{ needs.semantic-release.outputs.next-version }}"
+        cat > predicate.json <<EOF
+        {
+          "type": "https://in-toto.io/Statement/v0.1",
+          "predicateType": "https://slsa.dev/provenance/v0.2",
+          "subject": [
+            {
+              "name": "${V_TAG}"
+            }
+          ],
+          "predicate": {
+            "builder": { "id": "github-actions/${{ github.workflow }}" },
+            "buildType": "docker",
+            "metadata": {
+              "version": "${VERSION}",
+              "commit": "${GITHUB_SHA}",
+              "repository": "${GITHUB_REPOSITORY}"
+            }
+          }
+        }
+        EOF
+
+    - name: Create cosign key from secret
+      env:
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      run: |
+        echo "$COSIGN_PRIVATE_KEY" | base64 --decode > cosign.key
+        chmod 600 cosign.key
+
+    - name: Attest Docker image
+      run: |
+        IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/cpp-cli"
+        V_TAG="${IMAGE_NAME}:v${{ needs.semantic-release.outputs.next-version }}"
+        cosign attest --key cosign.key --predicate predicate.json "$V_TAG"
+
+    - name: Verify attestation
+      env:
+        COSIGN_PUBLIC_KEY: ${{ vars.COSIGN_PUBLIC_KEY }}
+      run: |
+        echo "$COSIGN_PUBLIC_KEY" > cosign.pub
+        IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/cpp-cli"
+        V_TAG="${IMAGE_NAME}:v${{ needs.semantic-release.outputs.next-version }}"
+        cosign verify-attestation --key cosign.pub "$V_TAG"
