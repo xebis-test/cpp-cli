@@ -125,7 +125,7 @@ jobs:
 
     - name: Attest Docker image
       env:
-        COSIGN_PASSWORD: ""
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       run: |
         IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/cpp-cli"
         V_TAG="${IMAGE_NAME}:v${{ needs.semantic-release.outputs.next-version }}"
@@ -134,7 +134,7 @@ jobs:
     - name: Verify attestation
       env:
         COSIGN_PUBLIC_KEY: ${{ vars.COSIGN_PUBLIC_KEY }}
-        COSIGN_PASSWORD: ""
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       run: |
         echo "$COSIGN_PUBLIC_KEY" > cosign.pub
         IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/cpp-cli"
