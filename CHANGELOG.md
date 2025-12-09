@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/xebis-test/cpp-cli/compare/v1.1.0...v1.2.0) (2025-12-09)
+
+### Features
+
+* signing 3 ([effebbf](https://github.com/xebis-test/cpp-cli/commit/effebbfbdff08c1e7ed6d3a9cf6be3edeae6897b))
+
 ## [1.1.0](https://github.com/xebis-test/cpp-cli/compare/v1.0.0...v1.1.0) (2025-12-09)
 
 ### Features
