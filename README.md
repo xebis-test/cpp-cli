@@ -1,6 +1,6 @@
 # cpp-cli
 
-Hello world C++ CLI application.
+Hello world C++ CLI application
 
 ## Features
 
