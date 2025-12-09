@@ -120,7 +120,7 @@ jobs:
       env:
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
       run: |
-        echo "$COSIGN_PRIVATE_KEY" | base64 --decode > cosign.key
+        echo "$COSIGN_PRIVATE_KEY" > cosign.key
         chmod 600 cosign.key
 
     - name: Attest Docker image
